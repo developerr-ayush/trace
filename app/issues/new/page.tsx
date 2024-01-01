@@ -1,31 +1,30 @@
 "use client"
 import React, { useState } from 'react'
-import { Button, Callout, CalloutIcon, Text, TextField } from '@radix-ui/themes'
+import { Button, Callout, TextField } from '@radix-ui/themes'
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from 'react-hook-form';
 import axios from "axios";
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/createIssueSchema';
 import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
-
+import { useRouter } from 'next/navigation';
 type IssueForm = z.infer<typeof createIssueSchema>
 
 const NewissuePage = () => {
+    const { push } = useRouter();
     const { register, control, handleSubmit, formState: { errors } } = useForm<IssueForm>({
         resolver: zodResolver(createIssueSchema)
     })
-    const router = useRouter();
     const [error, setError] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const onSubmit = async (data:any) => {
+    const onSubmit = async (data: any) => {
         try {
             setIsSubmitting(true)
             await axios.post("/api/issues", data);
-            router.push("/issues")
+            push("/issues")
         } catch (e) {
             setError("Something went wrong")
             setIsSubmitting(false)
