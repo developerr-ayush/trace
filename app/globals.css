@@ -19,3 +19,6 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+.radix-theme {
+  --default-font-family: var(--font-inter);
+}
