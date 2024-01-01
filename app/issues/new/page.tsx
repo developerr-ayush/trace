@@ -21,7 +21,7 @@ const NewissuePage = () => {
     const router = useRouter();
     const [error, setError] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const onSubmit = async (data) => {
+    const onSubmit = async (data:any) => {
         try {
             setIsSubmitting(true)
             await axios.post("/api/issues", data);
