@@ -21,6 +21,16 @@ const NewissuePage = () => {
     const router = useRouter();
     const [error, setError] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const onSubmit = async (data) => {
+        try {
+            setIsSubmitting(true)
+            await axios.post("/api/issues", data);
+            router.push("/issues")
+        } catch (e) {
+            setError("Something went wrong")
+            setIsSubmitting(false)
+        }
+    }
     return (
         <div className='max-w-xl'>
             {error &&
@@ -31,16 +41,7 @@ const NewissuePage = () => {
                 </Callout.Root>}
 
             <form
-                onSubmit={handleSubmit(async (data) => {
-                    try {
-                        setIsSubmitting(true)
-                        await axios.post("/api/issues", data);
-                        router.push("/issues")
-                    } catch (e) {
-                        setError("Something went wrong")
-                        setIsSubmitting(false)
-                    }
-                })}
+                onSubmit={handleSubmit(onSubmit)}
             >
                 <TextField.Root>
                     <TextField.Input placeholder="Search the docs…" {...register("title")} />
@@ -55,8 +56,6 @@ const NewissuePage = () => {
                     Create Issue
                     {isSubmitting && <Spinner />}
                 </Button>
-
-
             </form>
         </div>
     )
