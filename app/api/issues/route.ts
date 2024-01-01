@@ -6,13 +6,13 @@ let createIssueSchema = z.object({
   description: z.string().min(1),
 });
 
-export async function POSR(request: NextRequest) {
-  const body = request.json();
+export async function POST(request: NextRequest) {
+  const body: any = await request.json();
   const validation = createIssueSchema.safeParse(body);
   if (!validation.success) {
-    return NextResponse.json(validation.error, { status: 400 });
+    return NextResponse.json(validation.error.errors, { status: 400 });
   }
-  const newIssue = prisma.issues.create({
+  const newIssue = await prisma.issues.create({
     data: {
       title: body.title,
       description: body.description,
