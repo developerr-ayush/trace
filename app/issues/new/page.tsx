@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/createIssueSchema';
 import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 type IssueForm = z.infer<typeof createIssueSchema>
 
@@ -19,6 +20,7 @@ const NewissuePage = () => {
     })
     const router = useRouter();
     const [error, setError] = useState("")
+    const [isSubmitting, setIsSubmitting] = useState(false)
     return (
         <div className='max-w-xl'>
             {error &&
@@ -31,10 +33,12 @@ const NewissuePage = () => {
             <form
                 onSubmit={handleSubmit(async (data) => {
                     try {
+                        setIsSubmitting(true)
                         await axios.post("/api/issues", data);
                         router.push("/issues")
                     } catch (e) {
                         setError("Something went wrong")
+                        setIsSubmitting(false)
                     }
                 })}
             >
@@ -47,8 +51,9 @@ const NewissuePage = () => {
                     render={({ field }) => <SimpleMDE className="my-4" placeholder="Reply to comment…" {...field} />}
                 />
                 <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                <Button>
+                <Button disabled={isSubmitting}>
                     Create Issue
+                    {isSubmitting && <Spinner />}
                 </Button>
 
 
