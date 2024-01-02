@@ -5,6 +5,11 @@ async function allIssues() {
 }
 export const IssueTable = async () => {
   const issue = await allIssues()
+  if (!issue.length) return (
+    <div>
+      No Data Found
+    </div>
+  )
   return (
     <Table.Root>
       <Table.Header>
