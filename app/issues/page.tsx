@@ -18,13 +18,14 @@ let issuesDBList = [
   "COMPLETED"
 ]
 const Issues = () => {
-  const [tableRow, setTableRow] = useState(null)
+  const [tableRow, setTableRow] = useState([])
   const [filter, setFilter] = useState(0)
   useEffect(() => {
-    getRequest("/api/issues").then(res => {
-      let data;
-      if (issuesDBList[0] != issuesDBList[filter]) {
-        data = res.filter((data: any) => data.status)
+    let issues = getRequest("/api/issues")
+    issues.then(res => {
+      let data = res;
+      if (0 != filter) {
+        data = res.filter((data: any) => data.status == issuesDBList[filter])
       }
       setTableRow(data)
     })
@@ -39,7 +40,7 @@ const Issues = () => {
           </Link>
         </Button>
       </div>
-      {tableRow && <IssueList rows={tableRow} />}
+      {!!tableRow.length ? <IssueList rows={tableRow} /> : <div className="Error">No Data Found</div>}
     </div>
   )
 

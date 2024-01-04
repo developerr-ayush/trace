@@ -2,6 +2,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React from 'react'
 import Status from './Status'
+import Link from 'next/link'
 interface issuelistType {
     rows: any
 }
@@ -18,20 +19,22 @@ const IssueList = ({ rows }: issuelistType) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows ? rows.map((row: any) => (
+                    {!!rows && rows.map((row: any) => (
                         <TableRow
                             key={row.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {row.id}
+                                <Link href={`/issues/${row.id}`}>
+                                    {row.id}
+                                </Link>
                             </TableCell>
                             <TableCell align="right">{row.title}</TableCell>
                             <TableCell align="right">{Status(row.status)}</TableCell>
                             <TableCell align="right">{row.createdAt}</TableCell>
                             <TableCell align="right">{row.protein}</TableCell>
                         </TableRow>
-                    )) : <div className="Error">Something went wrong</div>}
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer>
