@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@radix-ui/themes'
@@ -15,9 +15,21 @@ import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import { useRouter } from 'next/navigation';
 import { Alert } from '@mui/material'
+import { getRequest } from '@/app/FactoryFunction';
 type IssueForm = z.infer<typeof createIssueSchema>
-
-const NewissuePage = () => {
+interface dataType {
+    id: number,
+    title: string,
+    description: string,
+    status: string,
+    createdAt: Date,
+    updatedAt: Date
+}
+interface pageProps {
+    params: { id: number }
+}
+const EditissuePage: FC<pageProps> = ({ params }) => {
+    const [issue, setIssue] = useState<any>(null)
     const { push } = useRouter();
     const { register, control, handleSubmit, formState: { errors } } = useForm<IssueForm>({
         resolver: zodResolver(createIssueSchema)
@@ -34,6 +46,12 @@ const NewissuePage = () => {
             setIsSubmitting(false)
         }
     }
+    useEffect(() => {
+        getRequest(`/api/issues/${params.id}`).then(res => {
+            if (!res.error)
+                setIssue(res)
+        })
+    }, [])
     return (
         <div className='max-w-xl'>
             {error &&
@@ -62,4 +80,4 @@ const NewissuePage = () => {
     )
 }
 
-export default NewissuePage
+export default EditissuePage
