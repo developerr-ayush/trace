@@ -35,7 +35,7 @@ const initialValues = {
 }
 const EditissuePage: FC<pageProps> = ({ params }) => {
     const { push } = useRouter();
-
+    const [isLoading, setIsLoading] = useState(false);
     const [issue, setIssue] = useState<any>(initialValues)
     const [error, setError] = useState<any>("")
     const [errors, setErrors] = useState<any>(initialValues)
