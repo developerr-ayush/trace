@@ -40,7 +40,6 @@ const EditissuePage: FC<pageProps> = ({ params }) => {
     const [error, setError] = useState<any>("")
     const [errors, setErrors] = useState<any>(initialValues)
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-    console.log(issue)
     const handleSubmit = async (data: any) => {
         data.preventDefault()
         try {

@@ -38,7 +38,6 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
 
         } catch (e) {
             setIsDeleting(false);
-            console.log("something went wrong")
         }
     }
     useEffect(() => {

@@ -13,8 +13,7 @@ const IssueList = ({ rows }: issuelistType) => {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Issue Id</TableCell>
-                        <TableCell align="right">Issue Name</TableCell>
+                        <TableCell>Issue Name</TableCell>
                         <TableCell align="right">Status</TableCell>
                         <TableCell align="right">Created At</TableCell>
                     </TableRow>
@@ -25,12 +24,11 @@ const IssueList = ({ rows }: issuelistType) => {
                             key={row.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell component="th" scope="row">
+                            <TableCell scope="row">
                                 <Link href={`/issues/${row.id}`}>
-                                    {row.id}
+                                    {row.id}. {row.title}
                                 </Link>
                             </TableCell>
-                            <TableCell align="right">{row.title}</TableCell>
                             <TableCell align="right"><Status status={row.status} /></TableCell>
                             <TableCell align="right">{formatDate(row.createdAt)}</TableCell>
                         </TableRow>

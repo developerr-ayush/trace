@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   let body = await request.json();
   const validation = createIssueSchema.safeParse(body);
-  console.log(validation);
   if (!validation.success) {
     return NextResponse.json(validation.error.errors, { status: 400 });
   }
