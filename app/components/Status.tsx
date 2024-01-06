@@ -3,12 +3,12 @@ interface statusType {
     status: string;
 }
 function Status({ status }: statusType) {
-    let element = <Chip color='error' label="Open"/>
+    let element = <Chip color='error' label="Open" />
     if (status == "IN_PROGRESS")
-        element = <Chip color='warning' label="In Progress"/>
+        element = <Chip color='warning' label="In Progress" />
 
-    if (status == "closed")
-        element = <Chip color='success' label="Closed"/>
+    if (status == "CLOSED")
+        element = <Chip color='success' label="Completed" />
 
     return element
 }

@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 import React from 'react'
 import Status from './Status'
 import Link from 'next/link'
+import { formatDate } from '../FactoryFunction'
 interface issuelistType {
     rows: any
 }
@@ -30,9 +31,8 @@ const IssueList = ({ rows }: issuelistType) => {
                                 </Link>
                             </TableCell>
                             <TableCell align="right">{row.title}</TableCell>
-                            <TableCell align="right">{Status(row.status)}</TableCell>
-                            <TableCell align="right">{row.createdAt}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
+                            <TableCell align="right"><Status status={row.status} /></TableCell>
+                            <TableCell align="right">{formatDate(row.createdAt)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

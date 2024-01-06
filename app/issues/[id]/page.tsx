@@ -1,11 +1,14 @@
 "use client"
 import { formatDate, getRequest } from "@/app/FactoryFunction"
+import Spinner from "@/app/components/Spinner"
 import Status from "@/app/components/Status"
 import { Delete, Edit } from "@mui/icons-material"
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import axios from "axios"
 import Link from "next/link"
 import { FC, useEffect, useState } from "react"
 import React from 'react'
+import { useRouter } from 'next/navigation';
 
 interface pageProps {
     params: { id: number }
@@ -19,13 +22,24 @@ interface dataType {
     updatedAt: Date
 }
 const IssueDetail: FC<pageProps> = ({ params }) => {
+    const { push } = useRouter();
+
     const [issue, setIssue] = useState<any>(null)
     const [asssignee, setAssignee] = useState("Ayush")
+    const [isDeleting, setIsDeleting] = useState(false)
     const handleAssignee = (e: SelectChangeEvent) => {
         setAssignee(e.target.value)
     }
-    const handleEdit = () => {
+    let handleDelete = async () => {
+        try {
+            setIsDeleting(true);
+            await axios.delete(`/api/issues/${params.id}`)
+            push("/issues")
 
+        } catch (e) {
+            setIsDeleting(false);
+            console.log("something went wrong")
+        }
     }
     useEffect(() => {
         getRequest(`/api/issues/${params.id}`).then(res => {
@@ -56,24 +70,26 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={asssignee}
-                        label="Age"
+                        label="Assignee"
                         onChange={handleAssignee}
                     >
-                        <MenuItem value={10}>Ayush</MenuItem>
-                        <MenuItem value={20}>Neha</MenuItem>
-                        <MenuItem value={30}>Someone You Dont Know</MenuItem>
+                        <MenuItem value="Ayush">Ayush</MenuItem>
+                        <MenuItem value="Neha">Neha</MenuItem>
+                        <MenuItem value="No-idea">Someone You Dont Know</MenuItem>
                     </Select>
                 </FormControl>
-                <Button variant="outlined" className="w-full" onClick={handleEdit}>
+                <Button variant="outlined" className="w-full">
                     <Link href={`/issues/${params.id}/edit`}>
                         <Edit />
                         EDIT
                     </Link>
                 </Button>
 
-                <Button variant="outlined" className="w-full" color="error">
+                <Button variant="outlined" className="w-full" color="error" onClick={handleDelete} disabled={isDeleting}>
                     <Delete />
                     DELETE
+                    {isDeleting && <Spinner />}
+
                 </Button>
 
             </div>

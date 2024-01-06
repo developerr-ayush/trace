@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@radix-ui/themes'
@@ -14,52 +14,76 @@ import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import { useRouter } from 'next/navigation';
-import { Alert } from '@mui/material'
+import { Alert, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { formatDate, getRequest } from '@/app/FactoryFunction';
 type IssueForm = z.infer<typeof createIssueSchema>
-
-const NewissuePage = () => {
+interface dataType {
+    id: number,
+    title: string,
+    description: string,
+    status: string,
+    createdAt: Date,
+    updatedAt: Date
+}
+interface pageProps {
+    params: { id: number }
+}
+const initialValues = {
+    title: "",
+    description: "",
+    status: "OPEN"
+}
+const EditissuePage: FC<pageProps> = ({ params }) => {
     const { push } = useRouter();
-    const { register, control, handleSubmit, formState: { errors } } = useForm<IssueForm>({
-        resolver: zodResolver(createIssueSchema)
-    })
-    const [error, setError] = useState("")
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const onSubmit = async (data: any) => {
+
+    const [issue, setIssue] = useState<any>(initialValues)
+    const [error, setError] = useState<any>("")
+    const [errors, setErrors] = useState<any>(initialValues)
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+    console.log(issue)
+    const handleSubmit = async (data: any) => {
+        data.preventDefault()
         try {
             setIsSubmitting(true)
-            await axios.post("/api/issues", data);
+            await axios.post(`/api/issues`, issue);
             push("/issues")
         } catch (e) {
             setError("Something went wrong")
             setIsSubmitting(false)
         }
     }
-    return (
+    const handleChange = (data: string, value: string) => {
+        setIssue({ ...issue, [data]: value })
+    }
+    return issue ? (
         <div className='max-w-xl'>
             {error &&
                 <Alert severity="error" className='mb-4'>{error}</Alert>
             }
             <Box
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit}
                 component="form"
                 noValidate
                 autoComplete="off"
             >
                 <div className="mb-4">
-                    <TextField helperText={errors.title?.message} error={!!errors.title?.message} id="outlined-basic" label="Title" variant="outlined" className='w-full' {...register("title")} />
+                    <TextField helperText={errors.title} error={!!errors.title} id="outlined-basic" label="Title" variant="outlined" className='w-full' name="title" value={issue.title} onChange={(e) => handleChange("title", e.target.value)} />
                 </div>
-                <Controller name="description"
-                    control={control}
-                    render={({ field }) => <SimpleMDE className="my-4" placeholder="Description..." {...field} />}
-                />
-                <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                <Button disabled={isSubmitting}>
-                    Create Issue
-                    {isSubmitting && <Spinner />}
-                </Button>
+                <div className="mb-4">
+                    <SimpleMDE value={issue.description} onChange={(e) => { handleChange("description", e) }} />
+                </div>
+                <div>
+                    <Button disabled={isSubmitting}>
+                        Edit Issue
+                        {isSubmitting && <Spinner />}
+                    </Button>
+                </div>
             </Box>
         </div>
-    )
+    ) : (<div>
+        <h3 className="text-xl">Page Not Found</h3>
+    </div>)
+
 }
 
-export default NewissuePage
+export default EditissuePage

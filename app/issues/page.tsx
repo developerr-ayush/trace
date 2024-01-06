@@ -15,7 +15,7 @@ let issuesDBList = [
   "ALL ISSUES",
   "OPEN",
   "IN_PROGRESS",
-  "COMPLETED"
+  "CLOSED"
 ]
 const Issues = () => {
   const [tableRow, setTableRow] = useState([])
