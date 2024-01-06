@@ -63,7 +63,7 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
                 </div>
             </div>
             <div className="action flex flex-col gap-2 flex-1">
-                <FormControl fullWidth>
+                {/* <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Assignee</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -76,7 +76,7 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
                         <MenuItem value="Neha">Neha</MenuItem>
                         <MenuItem value="No-idea">Someone You Dont Know</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 <Button variant="outlined" className="w-full">
                     <Link href={`/issues/${params.id}/edit`}>
                         <Edit />
