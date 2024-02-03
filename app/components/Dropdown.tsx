@@ -19,6 +19,9 @@ const DropDown = ({ issueList, dbIssueList, selected }: dropdownType) => {
         setActive(event.target.value);
         push(event.target.value == 0 ? "/issues" : `?status=${dbIssueList[event.target.value]}`);
     };
+    useEffect(() => {
+        setActive(dbIssueList.indexOf(selected) ?? 0)
+    }, [])
     return (
         <>
             <Box sx={{ minWidth: 200 }}>
