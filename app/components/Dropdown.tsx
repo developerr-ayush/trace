@@ -3,16 +3,21 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
+
 interface dropdownType {
     issueList: any,
-    filter: any,
-    setFilter: any
+    dbIssueList: any,
+    selected: any
 }
-const DropDown = ({ issueList, filter, setFilter }: dropdownType) => {
+const DropDown = ({ issueList, dbIssueList, selected }: dropdownType) => {
+    const { push } = useRouter();
+    const [active, setActive] = useState(dbIssueList.indexOf(selected) ?? 0)
     const handleChange = (event: any) => {
-        setFilter(event.target.value);
+        setActive(event.target.value);
+        push(event.target.value == 0 ? "/issues" : `?status=${dbIssueList[event.target.value]}`);
     };
     return (
         <>
@@ -22,7 +27,7 @@ const DropDown = ({ issueList, filter, setFilter }: dropdownType) => {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={filter}
+                        value={active ?? 0}
                         label="Status"
                         onChange={handleChange}
                     >

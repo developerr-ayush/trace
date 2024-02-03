@@ -23,7 +23,7 @@ interface dataType {
 }
 const IssueDetail: FC<pageProps> = ({ params }) => {
     const { push } = useRouter();
-
+    const [isLoading, setIsLoading] = useState(false);
     const [issue, setIssue] = useState<any>(null)
     const [asssignee, setAssignee] = useState("Ayush")
     const [isDeleting, setIsDeleting] = useState(false)
@@ -41,10 +41,18 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
         }
     }
     useEffect(() => {
-        getRequest(`/api/issues/${params.id}`).then(res => {
-            if (!res.error)
-                setIssue(res)
-        })
+        const fetchReq = async () => {
+            setIsLoading(true);
+            try {
+                const response = await getRequest(`/api/issues/${params.id}`);
+                setIssue(response);
+            } catch (error) {
+                console.log("Error fetching issues: Please try again later.");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchReq()
     }, [])
     return issue ? (
 
@@ -93,9 +101,11 @@ const IssueDetail: FC<pageProps> = ({ params }) => {
 
             </div>
         </div>
-    ) : (<div>
-        <h3 className="text-xl">Page Not Found</h3>
-    </div>)
+    ) : (
+        isLoading ? <div className="loading">Loading issues...</div> :
+            <div>
+                <h3 className="text-xl">Page Not Found</h3>
+            </div>)
 
 
 }
